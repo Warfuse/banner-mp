@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Braze Banner Marketplace - Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .mode-btn {
+            padding: 0.75rem 2rem;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+        }
+
+        .mode-btn:hover:not(.active) {
+            border-color: #667eea;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .placement-type-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .placement-card {
+            padding: 1.5rem;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .placement-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .placement-card h3 {
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .placement-card p {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .framework-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .framework-card {
+            padding: 1rem;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .framework-card.selected {
+            border-color: #764ba2;
+            background: rgba(118, 75, 162, 0.1);
+        }
+
+        .api-test-section {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .test-btn, .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .test-btn:hover, .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .result-box {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #4ade80;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+
+        .inventory-preview {
+            background: #1a1a1a;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .inventory-preview h3 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .preview-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .badge.peak { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge.play { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .badge.pulse { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+
+        code {
+            background: #333;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #667eea;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .inventory-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .inventory-card:hover {
+            border-color: #667eea;
+            transform: translateY(-4px);
+        }
+
+        .inventory-card h3 {
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .inventory-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .availability-bar {
+            background: #333;
+            height: 20px;
+            border-radius: 10px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .availability-fill {
+            background: linear-gradient(90deg, #22c55e 0%, #4ade80 100%);
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .inventory-price {
+            font-size: 1.5rem;
+            color: #4ade80;
+            margin-top: 1rem;
+        }
+
+        .date-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .share-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .share-slider {
+            flex: 1;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .share-value {
+            min-width: 60px;
+            text-align: right;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .cost-breakdown {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .cost-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+
+        .cost-total {
+            border-top: 2px solid #667eea;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .my-listings {
+            margin-top: 3rem;
+        }
+
+        .listing-item {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .listing-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Braze Banner Marketplace</h1>
+            <p>Monetise your Braze channels • Buy targeted placements</p>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="switchMode('publisher')">Publisher Mode</button>
+            <button class="mode-btn" onclick="switchMode('advertiser')">Advertiser Mode</button>
+        </div>
+
+        <!-- Publisher Section -->
+        <div id="publisher-section" class="section active">
+            <h2>Create Placement Listing</h2>
+            
+            <div class="placement-type-selector">
+                <div class="placement-card" onclick="selectPlacement('email')">
+                    <h3>📧 Email</h3>
+                    <p>Content blocks in email campaigns</p>
+                </div>
+                <div class="placement-card" onclick="selectPlacement('push')">
+                    <h3>🔔 Push Notification</h3>
+                    <p>Rich push with images</p>
+                </div>
+                <div class="placement-card" onclick="selectPlacement('inapp')">
+                    <h3>📱 In-App</h3>
+                    <p>Modal or slide-up messages</p>
+                </div>
+                <div class="placement-card" onclick="selectPlacement('banner')">
+                    <h3>🖼️ Braze Banner</h3>
+                    <p>Native banner placements</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Listing Title</label>
+                <input type="text" id="listing-title" placeholder="e.g., Weekly Parent Newsletter - Hero Banner">
+            </div>
+
+            <div class="form-group">
+                <label>Audience Description</label>
+                <textarea id="audience-desc" rows="3" placeholder="e.g., 25,000 verified parents with children aged 3-8, high engagement rate, premium households in UK"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Estimated Reach</label>
+                <input type="number" id="reach" placeholder="25000">
+            </div>
+
+            <div class="form-group">
+                <label>Campaign/Email Name</label>
+                <input type="text" id="campaign-name" placeholder="e.g., Weekly Family Newsletter">
+            </div>
+
+            <div class="form-group">
+                <label>Braze REST API Key</label>
+                <input type="password" id="rest-api-key" placeholder="Your Braze REST API Key (Content Blocks permission)">
+                <button class="test-btn" onclick="fetchContentBlocks()" style="margin-top: 0.5rem;">Load Content Blocks</button>
+                <p style="font-size: 0.8rem; color: #ef4444; margin-top: 0.5rem;">⚠️ In production, API keys must be stored securely server-side</p>
+            </div>
+
+            <div class="form-group" id="content-block-group" style="display: none;">
+                <label>Select Content Block</label>
+                <select id="content-block-select">
+                    <option value="">Loading content blocks...</option>
+                </select>
+                <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem;">Liquid tag: <code id="liquid-tag-display">-</code></p>
+            </div>
+
+            <div class="form-group" id="dimensions-group">
+                <label>Banner Dimensions (pixels)</label>
+                <input type="text" id="banner-dimensions" placeholder="e.g., 600x200">
+            </div>
+
+            <h3 style="margin: 2rem 0 1rem;">Availability Type</h3>
+            <div class="framework-selector">
+                <div class="framework-card" onclick="selectFramework('peak')">
+                    <h4>🎯 Peak</h4>
+                    <p>Premium events (Black Friday, Christmas)</p>
+                </div>
+                <div class="framework-card" onclick="selectFramework('play')">
+                    <h4>🎮 Play</h4>
+                    <p>Regular campaign slots</p>
+                </div>
+                <div class="framework-card" onclick="selectFramework('pulse')">
+                    <h4>📈 Pulse</h4>
+                    <p>Always-on placements</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Price per 1000 Touchpoints (CPM in £)</label>
+                <input type="number" id="cpm-price" placeholder="50" step="5">
+            </div>
+
+            <div class="form-group">
+                <label>Available From</label>
+                <input type="date" id="available-from">
+            </div>
+
+            <div class="form-group">
+                <label>Available Until</label>
+                <input type="date" id="available-until">
+            </div>
+
+            <div class="inventory-preview">
+                <h3>Listing Preview</h3>
+                <div id="preview-content">
+                    <p style="color: #888;">Fill in the details above to see your listing preview</p>
+                </div>
+            </div>
+
+            <div class="api-test-section">
+                <h3>Validate & List</h3>
+                <button class="test-btn" onclick="validateListing()">Validate Content Block</button>
+                <button class="submit-btn" onclick="createListing()" style="opacity: 0.5;" disabled>Create Listing</button>
+                <div id="publisher-result" class="result-box">Enter your REST API key and load content blocks to begin...</div>
+            </div>
+
+            <div class="my-listings">
+                <h2>My Active Listings</h2>
+                <div id="active-listings">
+                    <!-- Listings will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Advertiser Section -->
+        <div id="advertiser-section" class="section">
+            <h2>Browse Placement Inventory</h2>
+
+            <div class="form-group">
+                <label>Campaign Objective</label>
+                <select id="campaign-objective" onchange="filterInventory()">
+                    <option value="">All Placements</option>
+                    <option value="peak">Peak - Premium Events</option>
+                    <option value="play">Play - Regular Campaigns</option>
+                    <option value="pulse">Pulse - Always On</option>
+                </select>
+            </div>
+
+            <div class="inventory-grid" id="inventory-grid">
+                <!-- Sample inventory items -->
+                <div class="inventory-card" data-type="peak" onclick="selectInventory(this, 0)">
+                    <span class="badge peak">PEAK - BLACK FRIDAY</span>
+                    <h3>ParentCo Weekly Newsletter - Hero Banner</h3>
+                    <div class="inventory-meta">
+                        <p>📧 Email Banner • 600x200px</p>
+                        <p>👥 25,000 verified parents with children aged 3-8</p>
+                        <p>💷 Premium UK households, 45% open rate</p>
+                        <p>📅 Available: Nov 24-30</p>
+                    </div>
+                    <div class="availability-bar">
+                        <div class="availability-fill" style="width: 30%"></div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #888;">70% share available</p>
+                    <div class="inventory-price">£75 CPM</div>
+                </div>
+
+                <div class="inventory-card" data-type="play" onclick="selectInventory(this, 1)">
+                    <span class="badge play">PLAY - REGULAR</span>
+                    <h3>FitLife App - Push Notifications</h3>
+                    <div class="inventory-meta">
+                        <p>🔔 Rich Push Notification</p>
+                        <p>👥 120,000 active fitness enthusiasts</p>
+                        <p>💪 18-34 demographic, high engagement</p>
+                        <p>📅 Rolling weekly slots</p>
+                    </div>
+                    <div class="availability-bar">
+                        <div class="availability-fill" style="width: 50%"></div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #888;">50% share available</p>
+                    <div class="inventory-price">£40 CPM</div>
+                </div>
+
+                <div class="inventory-card" data-type="pulse" onclick="selectInventory(this, 2)">
+                    <span class="badge pulse">PULSE - ALWAYS ON</span>
+                    <h3>ShopSmart - In-App Welcome Modal</h3>
+                    <div class="inventory-meta">
+                        <p>📱 In-App Modal • Full screen</p>
+                        <p>👥 200,000 MAU shoppers</p>
+                        <p>🛍️ Fashion & lifestyle focused</p>
+                        <p>📅 Monthly commitment</p>
+                    </div>
+                    <div class="availability-bar">
+                        <div class="availability-fill" style="width: 80%"></div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #888;">20% share available</p>
+                    <div class="inventory-price">£25 CPM</div>
+                </div>
+            </div>
+
+            <div id="booking-section" style="display: none; margin-top: 3rem;">
+                <h2>Book Placement</h2>
+                
+                <div class="date-selector">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="booking-start">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="booking-end">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Share of Voice (%)</label>
+                    <div class="share-selector">
+                        <input type="range" id="share-slider" min="10" max="100" step="10" value="50" oninput="updateShare()">
+                        <span class="share-value" id="share-value">50%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Creative</label>
+                    <input type="file" id="creative-upload" accept="image/*,.html">
+                    <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem;">Accepted: Images (JPG, PNG) or HTML</p>
+                </div>
+
+                <div class="cost-breakdown">
+                    <h4>Cost Breakdown</h4>
+                    <div class="cost-line">
+                        <span>Base CPM:</span>
+                        <span id="base-cpm">£0</span>
+                    </div>
+                    <div class="cost-line">
+                        <span>Estimated Impressions:</span>
+                        <span id="est-impressions">0</span>
+                    </div>
+                    <div class="cost-line">
+                        <span>Share of Voice:</span>
+                        <span id="share-display">50%</span>
+                    </div>
+                    <div class="cost-line">
+                        <span>Duration:</span>
+                        <span id="duration">0 days</span>
+                    </div>
+                    <div class="cost-line cost-total">
+                        <span>Total Cost:</span>
+                        <span id="total-cost">£0</span>
+                    </div>
+                </div>
+
+                <button class="submit-btn" onclick="submitBooking()">Submit Booking</button>
+                <div id="advertiser-result" class="result-box">Booking status will appear here...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let selectedPlacement = '';
+        let selectedFramework = '';
+        let selectedInventory = null;
+        let listings = [];
+        let contentBlocks = [];
+        let selectedContentBlock = null;
+
+        // Mode switching
+        function switchMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            
+            if (mode === 'publisher') {
+                document.querySelector('.mode-btn:first-child').classList.add('active');
+                document.getElementById('publisher-section').classList.add('active');
+            } else {
+                document.querySelector('.mode-btn:last-child').classList.add('active');
+                document.getElementById('advertiser-section').classList.add('active');
+            }
+        }
+
+        // Publisher functions
+        function selectPlacement(type) {
+            selectedPlacement = type;
+            document.querySelectorAll('.placement-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.placement-card').classList.add('selected');
+            
+            // Show/hide dimensions field
+            const dimensionsGroup = document.getElementById('dimensions-group');
+            if (type === 'email' || type === 'banner') {
+                dimensionsGroup.style.display = 'block';
+            } else {
+                dimensionsGroup.style.display = 'none';
+            }
+            
+            updatePreview();
+        }
+
+        function selectFramework(type) {
+            selectedFramework = type;
+            document.querySelectorAll('.framework-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.framework-card').classList.add('selected');
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('listing-title').value;
+            const audience = document.getElementById('audience-desc').value;
+            const reach = document.getElementById('reach').value;
+            const cpm = document.getElementById('cpm-price').value;
+            const dimensions = document.getElementById('banner-dimensions').value;
+            
+            const previewContent = document.getElementById('preview-content');
+            
+            if (title || audience || reach) {
+                let badgeHtml = '';
+                if (selectedFramework) {
+                    badgeHtml = `<span class="badge ${selectedFramework}">${selectedFramework.toUpperCase()}</span>`;
+                }
+                
+                previewContent.innerHTML = `
+                    ${badgeHtml}
+                    <h3 style="margin: 1rem 0;">${title || 'Untitled Listing'}</h3>
+                    <div class="preview-item">
+                        <span>Type:</span>
+                        <span>${selectedPlacement || 'Not selected'} ${dimensions ? `• ${dimensions}` : ''}</span>
+                    </div>
+                    <div class="preview-item">
+                        <span>Content Block:</span>
+                        <span>${selectedContentBlock ? selectedContentBlock.name : 'Not selected'}</span>
+                    </div>
+                    <div class="preview-item">
+                        <span>Audience:</span>
+                        <span>${audience || 'Not specified'}</span>
+                    </div>
+                    <div class="preview-item">
+                        <span>Reach:</span>
+                        <span>${reach ? reach.toLocaleString() : '0'} impressions</span>
+                    </div>
+                    <div class="preview-item">
+                        <span>CPM:</span>
+                        <span style="color: #4ade80; font-weight: bold;">£${cpm || '0'}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Add event listeners for real-time preview updates
+        document.getElementById('listing-title').addEventListener('input', updatePreview);
+        document.getElementById('audience-desc').addEventListener('input', updatePreview);
+        document.getElementById('reach').addEventListener('input', updatePreview);
+        document.getElementById('cpm-price').addEventListener('input', updatePreview);
+        document.getElementById('banner-dimensions').addEventListener('input', updatePreview);
+        
+        // Handle content block selection
+        document.getElementById('content-block-select').addEventListener('change', function(e) {
+            const selectedId = e.target.value;
+            if (selectedId) {
+                selectedContentBlock = contentBlocks.find(block => block.content_block_id === selectedId);
+                document.getElementById('liquid-tag-display').textContent = selectedContentBlock.liquid_tag;
+                updatePreview();
+            } else {
+                selectedContentBlock = null;
+                document.getElementById('liquid-tag-display').textContent = '-';
+            }
+        });
+
+        async function fetchContentBlocks() {
+            const apiKey = document.getElementById('rest-api-key').value;
+            const resultBox = document.getElementById('publisher-result');
+            
+            if (!apiKey) {
+                resultBox.textContent = 'Please enter your REST API key';
+                resultBox.style.color = '#ef4444';
+                return;
+            }
+            
+            resultBox.textContent = 'Fetching content blocks...\n';
+            resultBox.style.color = '#4ade80';
+            
+            try {
+                // In production:
+                // const response = await fetch('https://rest.fra-02.braze.eu/content_blocks/list', {
+                //     method: 'GET',
+                //     headers: {
+                //         'Authorization': `Bearer ${apiKey}`,
+                //         'Content-Type': 'application/json'
+                //     }
+                // });
+                // const data = await response.json();
+                // contentBlocks = data.content_blocks;
+                
+                // Simulated response
+                setTimeout(() => {
+                    // Simulate API response
+                    contentBlocks = [
+                        {
+                            content_block_id: 'd8cd8967-d973-474e-894d-7d3fc5158625',
+                            name: 'test',
+                            content_type: 'html',
+                            liquid_tag: '{{content_blocks.${test}}}',
+                            created_at: '2024-01-15',
+                            updated_at: '2024-01-15'
+                        },
+                        {
+                            content_block_id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+                            name: 'newsletter_hero_banner',
+                            content_type: 'html',
+                            liquid_tag: '{{content_blocks.${newsletter_hero_banner}}}',
+                            created_at: '2024-01-10',
+                            updated_at: '2024-01-14'
+                        },
+                        {
+                            content_block_id: 'f9e8d7c6-b5a4-3210-fedc-ba0987654321',
+                            name: 'promotional_footer',
+                            content_type: 'html',
+                            liquid_tag: '{{content_blocks.${promotional_footer}}}',
+                            created_at: '2024-01-05',
+                            updated_at: '2024-01-12'
+                        }
+                    ];
+                    
+                    // Populate dropdown
+                    const select = document.getElementById('content-block-select');
+                    select.innerHTML = '<option value="">Select a content block...</option>';
+                    
+                    contentBlocks.forEach(block => {
+                        const option = document.createElement('option');
+                        option.value = block.content_block_id;
+                        option.textContent = `${block.name} (${block.content_type})`;
+                        select.appendChild(option);
+                    });
+                    
+                    document.getElementById('content-block-group').style.display = 'block';
+                    resultBox.textContent = `✓ Found ${contentBlocks.length} content blocks\n`;
+                    resultBox.textContent += 'Select a content block to continue';
+                    
+                }, 1000);
+                
+            } catch (error) {
+                resultBox.textContent = `Error: ${error.message}`;
+                resultBox.style.color = '#ef4444';
+            }
+        }
+
+        async function validateListing() {
+            const apiKey = document.getElementById('rest-api-key').value;
+            const resultBox = document.getElementById('publisher-result');
+            
+            if (!apiKey || !selectedContentBlock) {
+                resultBox.textContent = 'Please select a content block first';
+                resultBox.style.color = '#ef4444';
+                return;
+            }
+            
+            resultBox.textContent = 'Validating content block...\n';
+            resultBox.style.color = '#4ade80';
+            
+            // Simulate validation
+            setTimeout(() => {
+                resultBox.textContent += `✓ Content block validated: ${selectedContentBlock.name}\n`;
+                resultBox.textContent += `✓ Type: ${selectedContentBlock.content_type}\n`;
+                resultBox.textContent += `✓ Last updated: ${selectedContentBlock.updated_at}\n`;
+                resultBox.textContent += `✓ Ready to create listing!\n`;
+                
+                // Enable create listing button
+                const submitBtn = document.querySelector('.submit-btn');
+                submitBtn.style.opacity = '1';
+                submitBtn.disabled = false;
+            }, 1000);
+        }
+
+        function createListing() {
+            if (!selectedContentBlock) {
+                alert('Please select a content block');
+                return;
+            }
+            
+            const listing = {
+                id: Date.now(),
+                title: document.getElementById('listing-title').value,
+                audience: document.getElementById('audience-desc').value,
+                reach: document.getElementById('reach').value,
+                campaignName: document.getElementById('campaign-name').value,
+                contentBlockId: selectedContentBlock.content_block_id,
+                contentBlockName: selectedContentBlock.name,
+                liquidTag: selectedContentBlock.liquid_tag,
+                apiKey: document.getElementById('rest-api-key').value, // In production, encrypt this!
+                placement: selectedPlacement,
+                framework: selectedFramework,
+                cpm: document.getElementById('cpm-price').value,
+                dimensions: document.getElementById('banner-dimensions').value,
+                availableFrom: document.getElementById('available-from').value,
+                availableUntil: document.getElementById('available-until').value,
+                sharesSold: 0,
+                status: 'active'
+            };
+            
+            listings.push(listing);
+            
+            // Add to active listings display
+            const listingsContainer = document.getElementById('active-listings');
+            const listingElement = document.createElement('div');
+            listingElement.className = 'listing-item';
+            listingElement.innerHTML = `
+                <div>
+                    <h4>${listing.title}</h4>
+                    <p style="color: #888; font-size: 0.9rem;">${listing.placement} • ${listing.reach} reach • £${listing.cpm} CPM</p>
+                    <p style="color: #667eea; font-size: 0.8rem;">Content Block: ${listing.contentBlockName}</p>
+                </div>
+                <div class="listing-status">
+                    <div class="status-dot"></div>
+                    <span>Active</span>
+                </div>
+            `;
+            listingsContainer.appendChild(listingElement);
+            
+            // Clear form
+            document.querySelectorAll('input:not(#rest-api-key), textarea').forEach(input => input.value = '');
+            document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+            document.getElementById('content-block-select').value = '';
+            selectedContentBlock = null;
+            updatePreview();
+            
+            // Show success message
+            const resultBox = document.getElementById('publisher-result');
+            resultBox.textContent = 'Listing created successfully!';
+            resultBox.style.color = '#4ade80';
+            
+            // Disable submit button again
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.style.opacity = '0.5';
+            submitBtn.disabled = true;
+        }
+
+        // Advertiser functions
+        function filterInventory() {
+            const filter = document.getElementById('campaign-objective').value;
+            const cards = document.querySelectorAll('.inventory-card');
+            
+            cards.forEach(card => {
+                if (!filter || card.dataset.type === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function selectInventory(card, index) {
+            document.querySelectorAll('.inventory-card').forEach(c => c.style.borderColor = '#333');
+            card.style.borderColor = '#667eea';
+            
+            selectedInventory = index;
+            document.getElementById('booking-section').style.display = 'block';
+            
+            // Update booking section with selected inventory details
+            const prices = [75, 40, 25]; // CPM prices for the sample inventory
+            document.getElementById('base-cpm').textContent = `£${prices[index]}`;
+            
+            // Scroll to booking section
+            document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
+            
+            updateCostCalculation();
+        }
+
+        function updateShare() {
+            const value = document.getElementById('share-slider').value;
+            document.getElementById('share-value').textContent = value + '%';
+            document.getElementById('share-display').textContent = value + '%';
+            updateCostCalculation();
+        }
+
+        function updateCostCalculation() {
+            const startDate = new Date(document.getElementById('booking-start').value);
+            const endDate = new Date(document.getElementById('booking-end').value);
+            const shareOfVoice = parseInt(document.getElementById('share-slider').value);
+            
+            if (startDate && endDate && selectedInventory !== null) {
+                const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+                const reaches = [25000, 120000, 200000]; // Sample reaches
+                const prices = [75, 40, 25]; // Sample CPMs
+                
+                const dailyImpressions = reaches[selectedInventory] / 7; // Weekly reach / 7 days
+                const totalImpressions = dailyImpressions * days * (shareOfVoice / 100);
+                const totalCost = (totalImpressions / 1000) * prices[selectedInventory];
+                
+                document.getElementById('duration').textContent = `${days} days`;
+                document.getElementById('est-impressions').textContent = Math.round(totalImpressions).toLocaleString();
+                document.getElementById('total-cost').textContent = `£${totalCost.toFixed(2)}`;
+            }
+        }
+
+        // Add event listeners for date changes
+        document.getElementById('booking-start')?.addEventListener('change', updateCostCalculation);
+        document.getElementById('booking-end')?.addEventListener('change', updateCostCalculation);
+
+        function submitBooking() {
+            const resultBox = document.getElementById('advertiser-result');
+            const totalCost = document.getElementById('total-cost').textContent;
+            
+            resultBox.textContent = 'Processing booking...\n';
+            resultBox.style.color = '#4ade80';
+            
+            setTimeout(() => {
+                resultBox.textContent += `✓ Payment authorisation: Success\n`;
+                resultBox.textContent += `✓ Placement reserved\n`;
+                resultBox.textContent += `✓ Creative specifications sent to publisher\n`;
+                resultBox.textContent += `✓ Total commitment: ${totalCost}\n`;
+                resultBox.textContent += `\nBooking confirmed! You'll be charged based on actual delivery.`;
+                
+                // In production, this would trigger the content block update:
+                /*
+                const shareOfVoice = document.getElementById('share-slider').value;
+                const adHTML = '<div class="ad-banner">Your ad content here</div>';
+                
+                fetch('https://rest.fra-02.braze.eu/content_blocks/update', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${publisherApiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content_block_id: selectedPlacement.contentBlockId,
+                        content: `
+                            {% assign random_num = 'now' | date: '%s' | modulo: 100 %}
+                            {% if random_num < ${shareOfVoice} %}
+                                ${adHTML}
+                            {% else %}
+                                <!-- Publisher's default content -->
+                            {% endif %}
+                        `
+                    })
+                });
+                */
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
